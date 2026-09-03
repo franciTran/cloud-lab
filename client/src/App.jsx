@@ -7,6 +7,8 @@ function App() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
 
+    const [editingId, setEditingId] = useState(null);
+
     // Lấy danh sách sinh viên
     const getStudents = async () => {
         try {
@@ -23,22 +25,26 @@ function App() {
         getStudents();
     }, []);
 
-    // Thêm sinh viên
+    // Thêm hoặc cập nhật sinh viên
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await fetch("/api/students", {
-                method: "POST",
+            const url = editingId
+                ? `/api/students/${editingId}`
+                : "/api/students";
 
+            const method = editingId ? "PUT" : "POST";
+
+            const response = await fetch(url, {
+                method: method,
                 headers: {
                     "Content-Type": "application/json"
                 },
-
                 body: JSON.stringify({
-                    studentId: studentId,
-                    name: name,
-                    email: email
+                    studentId,
+                    name,
+                    email
                 })
             });
 
@@ -46,22 +52,78 @@ function App() {
 
             if (!response.ok) {
                 throw new Error(
-                    data.error || "Không thể thêm sinh viên"
+                    data.error || "Không thể thực hiện"
                 );
             }
 
-            alert("Thêm sinh viên thành công!");
+            alert(
+                editingId
+                    ? "Cập nhật sinh viên thành công!"
+                    : "Thêm sinh viên thành công!"
+            );
 
             setStudentId("");
             setName("");
             setEmail("");
+            setEditingId(null);
 
             getStudents();
 
         } catch (error) {
-            console.error("Lỗi thêm sinh viên:", error);
+            console.error("Lỗi:", error);
+            alert(error.message);
+        }
+    };
 
-            alert("Thêm sinh viên thất bại!");
+    // Chọn sinh viên để sửa
+    const handleEdit = (student) => {
+        setEditingId(student._id);
+        setStudentId(student.studentId);
+        setName(student.name);
+        setEmail(student.email);
+    };
+
+    // Hủy sửa
+    const handleCancel = () => {
+        setEditingId(null);
+        setStudentId("");
+        setName("");
+        setEmail("");
+    };
+
+    // Xóa sinh viên
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm(
+            "Bạn có chắc muốn xóa sinh viên này không?"
+        );
+
+        if (!confirmDelete) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `/api/students/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error || "Không thể xóa sinh viên"
+                );
+            }
+
+            alert("Xóa sinh viên thành công!");
+
+            getStudents();
+
+        } catch (error) {
+            console.error("Lỗi xóa:", error);
+            alert(error.message);
         }
     };
 
@@ -70,7 +132,11 @@ function App() {
 
             <h1>QUẢN LÝ SINH VIÊN</h1>
 
-            <h2>Thêm sinh viên</h2>
+            <h2>
+                {editingId
+                    ? "Cập nhật sinh viên"
+                    : "Thêm sinh viên"}
+            </h2>
 
             <form onSubmit={handleSubmit}>
 
@@ -113,7 +179,8 @@ function App() {
                         type="email"
                         value={email}
                         onChange={(e) =>
-                            setEmail(e.target.value)}
+                            setEmail(e.target.value)
+                        }
                         placeholder="Nhập email"
                         required
                     />
@@ -122,8 +189,20 @@ function App() {
                 <br />
 
                 <button type="submit">
-                    Thêm sinh viên
+                    {editingId
+                        ? "Cập nhật sinh viên"
+                        : "Thêm sinh viên"}
                 </button>
+
+                {editingId && (
+                    <button
+                        type="button"
+                        onClick={handleCancel}
+                        style={{ marginLeft: "10px" }}
+                    >
+                        Hủy
+                    </button>
+                )}
 
             </form>
 
@@ -148,6 +227,23 @@ function App() {
                         <strong>Email:</strong>{" "}
                         {student.email}
                     </p>
+
+                    <button
+                        onClick={() =>
+                            handleEdit(student)
+                        }
+                    >
+                        Sửa
+                    </button>
+
+                    <button
+                        onClick={() =>
+                            handleDelete(student._id)
+                        }
+                        style={{ marginLeft: "10px" }}
+                    >
+                        Xóa
+                    </button>
 
                     <hr />
 
