@@ -6,12 +6,19 @@ require("dotenv").config({
     path: path.join(__dirname, "../.env")
 });
 
-const Student = require("../models/Student");
+const Student = require("./models/Student");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+
+// GET - route kiểm tra API hoạt động
+app.get("/api/hello", (req, res) => {
+    res.json({ message: "Hello from backend!" });
+});
+
+
 
 // Kết nối MongoDB
 async function startServer() {
