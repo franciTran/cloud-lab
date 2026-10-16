@@ -1512,3 +1512,188 @@ input:focus-visible {
         transition-duration: 0.01ms !important;
     }
 }
+
+
+/* ===== EduManage polish overrides =====
+   Fixes Vite's default #root width/padding/text-align constraints
+   that can make the dashboard look narrow and overly centered. */
+html,
+body,
+#root {
+    width: 100%;
+    min-width: 320px;
+    min-height: 100%;
+    margin: 0;
+}
+
+#root {
+    max-width: none !important;
+    padding: 0 !important;
+    text-align: left !important;
+}
+
+body {
+    display: block !important;
+    min-width: 320px;
+    background:
+        radial-gradient(ellipse at 80% 0%, rgba(67, 97, 238, 0.055), transparent 38%),
+        var(--background);
+}
+
+.app-shell {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.main-content {
+    width: calc(100% - 254px);
+    min-width: 0;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 36px clamp(24px, 3vw, 52px) 30px;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    min-height: 72px;
+    box-shadow: 0 3px 14px rgba(26, 39, 68, 0.025);
+}
+
+.page-heading {
+    align-items: flex-end;
+    margin-bottom: 30px;
+}
+
+.page-heading h1 {
+    font-size: clamp(27px, 2.1vw, 34px);
+    letter-spacing: -1.15px;
+}
+
+.page-heading p {
+    font-size: 13px;
+}
+
+.button {
+    min-height: 44px;
+    border-radius: 10px;
+}
+
+.button-primary {
+    background: linear-gradient(135deg, #4d6bff, #3e55df);
+    box-shadow: 0 7px 16px rgba(67, 97, 238, 0.18);
+}
+
+.stats-grid {
+    gap: 22px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    padding: 25px 25px 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 18px rgba(26, 39, 68, 0.035);
+}
+
+.stat-number {
+    font-size: 35px;
+}
+
+.table-card {
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(26, 39, 68, 0.035);
+}
+
+.table-card-header {
+    padding: 25px 26px 21px;
+}
+
+.table-card-header h2 {
+    font-size: 17px;
+}
+
+.table-toolbar {
+    padding: 0 26px 22px;
+}
+
+.search-box {
+    height: 44px;
+    border-radius: 10px;
+}
+
+.search-box input {
+    font-size: 12px;
+}
+
+.students-table th {
+    height: 48px;
+    background: #f7f8fc;
+}
+
+.students-table td {
+    height: 76px;
+    font-size: 12px;
+}
+
+.student-name-cell strong {
+    font-size: 12px;
+}
+
+.student-code {
+    padding: 7px 10px;
+    border-radius: 7px;
+}
+
+.icon-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+}
+
+.page-footer {
+    padding-top: 25px;
+}
+
+@media (max-width: 1200px) {
+    .main-content {
+        width: calc(100% - 230px);
+    }
+
+    .page-container {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+}
+
+@media (max-width: 900px) {
+    .main-content {
+        width: calc(100% - 74px);
+    }
+
+    .page-container {
+        padding: 28px 22px 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-content {
+        width: calc(100% - 74px);
+    }
+
+    .page-container {
+        padding: 23px 14px 20px;
+    }
+
+    .page-heading {
+        align-items: flex-start;
+    }
+
+    .stat-card {
+        padding: 20px;
+    }
+}
